@@ -2,19 +2,18 @@ package com.foundvio.controller
 
 import com.foundvio.clouddb.model.User
 import com.foundvio.service.CloudDBService
+import com.foundvio.service.KafkaProducerConfig
 import com.huawei.agconnect.server.clouddb.exception.AGConnectCloudDBException
 import org.springframework.kafka.listener.ConsumerAwareRebalanceListener.LOGGER
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
 
 
 @RestController
 class UserController(
-    val cloudDBService: CloudDBService
+    val cloudDBService: CloudDBService,
+    val producer: KafkaProducerConfig
 ) {
 
     @GetMapping
@@ -40,5 +39,9 @@ class UserController(
         }
     }
 
+    @GetMapping("/test")
+    fun sendMessageToKafkaTopic(@RequestParam message: String) {
+        this.producer.sendMessage(message)
+    }
 
 }
