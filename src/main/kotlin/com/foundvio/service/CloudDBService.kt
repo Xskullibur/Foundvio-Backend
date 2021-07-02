@@ -1,5 +1,6 @@
 package com.foundvio.service
 
+import com.foundvio.clouddb.model.CredentialParserInputStream
 import com.huawei.agconnect.server.clouddb.request.CloudDBZoneConfig
 import com.huawei.agconnect.server.clouddb.service.AGConnectCloudDB
 import com.huawei.agconnect.server.clouddb.service.CloudDBZone
@@ -24,7 +25,7 @@ class CloudDBService(
 
         AGCClient.initialize(
             AGCParameter.builder()
-                .setCredential(CredentialParser.toCredential(credentialResource.file))
+                .setCredential(CredentialParserInputStream.toCredential(credentialResource.inputStream))
                 .build())
 
         agConnectCloudDB = AGConnectCloudDB.getInstance()

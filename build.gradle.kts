@@ -52,6 +52,6 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-springBoot {
-    mainClass.set("com.foundvio.FoundvioServerApplicationKt")
+tasks.getByName<Jar>("jar") {
+    enabled = false
 }
