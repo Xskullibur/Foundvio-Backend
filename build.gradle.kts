@@ -29,6 +29,8 @@ repositories {
 dependencies {
 
     implementation("com.huawei.agconnect.server:agconnect-database-server-sdk:1.0.1.300")
+    implementation("com.huawei.agconnect.server:agconnect-auth:1.2.0.300")
+
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.apache.kafka:kafka-streams")

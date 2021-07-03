@@ -6,12 +6,12 @@ import org.springframework.kafka.core.KafkaTemplate
 
 
 @Configuration
-class KafkaProducerConfig(
+class KafkaProducer(
     val kafkaTemplate: KafkaTemplate<String, String>
 ) {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(KafkaProducerConfig::class.java)
+        private val logger = LoggerFactory.getLogger(KafkaProducer::class.java)
         private const val TOPIC = "k874dhrh-users"
     }
 
