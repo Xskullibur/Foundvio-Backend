@@ -25,14 +25,17 @@ class UserController(
 
     @PostMapping("registerUser")
     fun registerUser(
+                @RequestHeader("access-token") accessToken: String,
                 @RequestParam isTracker: Boolean,
                 @RequestParam phone: String,
                 @RequestParam familyName: String,
                 @RequestParam givenName: String,
-    ): Response{
+    ): Response<Any> {
         return try{
+            val agcAuth = AGCAuth.getInstance()
+            val accessTokenResult = agcAuth.verifyAccessToken(accessToken, true)
             val user = User().apply {
-                this.id = UUID.randomUUID().toString()
+                this.id = accessTokenResult.sub
                 this.phone = phone
                 this.familyName = familyName
                 this.givenName = givenName
@@ -44,6 +47,12 @@ class UserController(
             Response.Error("Unable to register user")
         }
     }
+
+//    @GetMapping("userDetails")
+//    fun userDetails(): Response<Any>{
+//        val user = userService.queryUserById()
+//    }
+
 
 
     @GetMapping("/test")

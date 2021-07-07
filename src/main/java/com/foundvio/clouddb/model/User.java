@@ -21,7 +21,7 @@ import java.util.Date;
  */
 @PrimaryKeys({"id"})
 public final class User extends CloudDBZoneObject {
-    private String id;
+    private Long id;
 
     private String phone;
 
@@ -45,11 +45,11 @@ public final class User extends CloudDBZoneObject {
 
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

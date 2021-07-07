@@ -19,8 +19,7 @@ object HuaweiAuthValidation : Logging {
         if(token == null)throw InvalidAccessToken()
 
         try{
-            agcAuth.verifyAccessToken(token, true).aud
-
+            agcAuth.verifyAccessToken(token, true)
             return true
         }catch (e: AGCAuthException){
             logger.error("Invalid access token, error code: ${e.errorCode}")
