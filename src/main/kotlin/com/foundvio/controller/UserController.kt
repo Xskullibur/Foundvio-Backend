@@ -32,7 +32,7 @@ class UserController(
     ): Response{
         return try{
             val user = User().apply {
-                id = UUID.randomUUID().toString()
+                this.id = UUID.randomUUID().toString()
                 this.phone = phone
                 this.familyName = familyName
                 this.givenName = givenName
