@@ -48,10 +48,17 @@ class UserController(
         }
     }
 
-//    @GetMapping("userDetails")
-//    fun userDetails(): Response<Any>{
-//        val user = userService.queryUserById()
-//    }
+    @GetMapping("userDetails")
+    fun userDetails(@RequestHeader("access-token") accessToken: String): Response<Any>{
+        val agcAuth = AGCAuth.getInstance()
+        val accessTokenResult = agcAuth.verifyAccessToken(accessToken, true)
+        val user = userService.queryUserById(accessTokenResult.sub)
+        return if(user != null){
+            Response.Success(user)
+        }else{
+            Response.Error("Unable to find user")
+        }
+    }
 
 
 

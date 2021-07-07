@@ -28,10 +28,10 @@ class UserService(
         }
     }
 
-    fun queryUserById(id: String): User? {
+    fun queryUserById(id: Long): User? {
         return try{
             val result = mCloudDBZone.executeQuery(CloudDBZoneQuery.where(User::class.java)
-                .contains("id", id))
+                .equalTo("id", id))
             result.get().snapshotObjects.firstOrNull()
         } catch (e: Exception) {
             when(e){
