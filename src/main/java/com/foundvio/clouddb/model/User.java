@@ -6,17 +6,24 @@ package com.foundvio.clouddb.model;
 
 import com.huawei.agconnect.server.clouddb.request.CloudDBZoneObject;
 import com.huawei.agconnect.server.clouddb.annotations.DefaultValue;
+import com.huawei.agconnect.server.clouddb.request.Text;
 import com.huawei.agconnect.server.clouddb.annotations.NotNull;
+import com.huawei.agconnect.server.clouddb.annotations.Indexes;
 import com.huawei.agconnect.server.clouddb.annotations.PrimaryKeys;
+import com.huawei.agconnect.server.clouddb.annotations.EntireEncrypted;
+
+import java.util.Date;
 
 /**
  * Definition of ObjectType User.
  *
- * @since 2021-07-02
+ * @since 2021-07-07
  */
-@PrimaryKeys({"phoneId"})
+@PrimaryKeys({"id"})
 public final class User extends CloudDBZoneObject {
-    private String phoneId;
+    private String id;
+
+    private String phone;
 
     @NotNull
     @DefaultValue(stringValue = "NA")
@@ -27,23 +34,31 @@ public final class User extends CloudDBZoneObject {
     private String familyName;
 
     @NotNull
-    @DefaultValue(booleanValue = true)
+    @DefaultValue(booleanValue = false)
     private Boolean isTracker;
 
     public User() {
         super(User.class);
         this.givenName = "NA";
         this.familyName = "NA";
-        this.isTracker = true;
+        this.isTracker = false;
 
     }
 
-    public void setPhoneId(String phoneId) {
-        this.phoneId = phoneId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getPhoneId() {
-        return phoneId;
+    public String getId() {
+        return id;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     public void setGivenName(String givenName) {

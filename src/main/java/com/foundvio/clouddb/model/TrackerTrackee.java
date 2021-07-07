@@ -6,13 +6,18 @@ package com.foundvio.clouddb.model;
 
 import com.huawei.agconnect.server.clouddb.request.CloudDBZoneObject;
 import com.huawei.agconnect.server.clouddb.annotations.DefaultValue;
+import com.huawei.agconnect.server.clouddb.request.Text;
 import com.huawei.agconnect.server.clouddb.annotations.NotNull;
+import com.huawei.agconnect.server.clouddb.annotations.Indexes;
 import com.huawei.agconnect.server.clouddb.annotations.PrimaryKeys;
+import com.huawei.agconnect.server.clouddb.annotations.EntireEncrypted;
+
+import java.util.Date;
 
 /**
  * Definition of ObjectType TrackerTrackee.
  *
- * @since 2021-07-02
+ * @since 2021-07-07
  */
 @PrimaryKeys({"id"})
 public final class TrackerTrackee extends CloudDBZoneObject {

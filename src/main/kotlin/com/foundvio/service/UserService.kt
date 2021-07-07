@@ -19,10 +19,13 @@ class UserService(
             println(result.get())
         } catch (e: AGConnectCloudDBException) {
             ConsumerAwareRebalanceListener.LOGGER.warn("upsertBookInfo: " + e.message)
+            throw e
         } catch (e: ExecutionException) {
             ConsumerAwareRebalanceListener.LOGGER.warn("upsertBookInfo: " + e.message)
+            throw e
         } catch (e: InterruptedException) {
             ConsumerAwareRebalanceListener.LOGGER.warn("upsertBookInfo: " + e.message)
+            throw e
         }
     }
 

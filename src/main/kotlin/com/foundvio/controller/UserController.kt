@@ -9,6 +9,7 @@ import com.foundvio.utils.logger
 import com.huawei.agconnect.server.auth.exception.AGCAuthException
 import com.huawei.agconnect.server.auth.service.AGCAuth
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 
 @RestController
@@ -22,23 +23,25 @@ class UserController(
     @GetMapping
     fun index() = Response.Success()
 
-    @PostMapping("addUser")
-    fun addUser(@RequestHeader("access-token") accessToken: String,
-                @RequestParam isTracker: Boolean): Response{
-        val agcAuth = AGCAuth.getInstance()
+    @PostMapping("registerUser")
+    fun registerUser(
+                @RequestParam isTracker: Boolean,
+                @RequestParam phone: String,
+                @RequestParam familyName: String,
+                @RequestParam givenName: String,
+    ): Response{
         return try{
-            val agcAccessToken = agcAuth.verifyAccessToken(accessToken, true)
             val user = User().apply {
-                phoneId = agcAccessToken.phone
-                familyName = agcAccessToken.name
-                givenName = agcAccessToken.name
+                id = UUID.randomUUID().toString()
+                this.phone = phone
+                this.familyName = familyName
+                this.givenName = givenName
                 this.isTracker = isTracker
             }
             userService.upsertUser(user)
             Response.Success()
-        }catch (e: AGCAuthException){
-            logger.error("Invalid access token, error code: ${e.errorCode}")
-            Response.Error("Unable to verify access token")
+        }catch (e: Exception){
+            Response.Error("Unable to register user")
         }
     }
 
