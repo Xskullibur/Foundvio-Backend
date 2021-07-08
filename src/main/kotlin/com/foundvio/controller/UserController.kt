@@ -34,6 +34,9 @@ class UserController(
         return try{
             val agcAuth = AGCAuth.getInstance()
             val accessTokenResult = agcAuth.verifyAccessToken(accessToken, true)
+
+
+
             val user = User().apply {
                 this.id = accessTokenResult.sub
                 this.phone = phone
