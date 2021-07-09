@@ -1,15 +1,16 @@
 package com.foundvio.controller
 
 import com.foundvio.clouddb.model.User
+import com.foundvio.controller.request.SetupUserDetails
+import com.foundvio.controller.session.UserSession
 import com.foundvio.service.KafkaProducer
 import com.foundvio.service.UserService
 import com.foundvio.utils.Logging
 import com.foundvio.utils.Response
 import com.foundvio.utils.logger
-import com.huawei.agconnect.server.auth.exception.AGCAuthException
 import com.huawei.agconnect.server.auth.service.AGCAuth
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 
 @RestController
@@ -17,6 +18,9 @@ class UserController(
     val userService: UserService,
     val producer: KafkaProducer
 ) : Logging{
+
+    @Autowired
+    lateinit var userSession: UserSession
 
     private val logger = logger()
 
@@ -26,21 +30,17 @@ class UserController(
     @PostMapping("registerUser")
     fun registerUser(
                 @RequestHeader("access-token") accessToken: String,
-                @RequestParam isTracker: Boolean,
-                @RequestParam phone: String,
-                @RequestParam familyName: String,
-                @RequestParam givenName: String,
+                @RequestBody userDetails: SetupUserDetails
     ): Response<Any> {
         return try{
             val agcAuth = AGCAuth.getInstance()
             val accessTokenResult = agcAuth.verifyAccessToken(accessToken, true)
-
             val user = User().apply {
                 this.id = accessTokenResult.sub
-                this.phone = phone
-                this.familyName = familyName
-                this.givenName = givenName
-                this.isTracker = isTracker
+                this.phone = userDetails.phone
+                this.familyName = userDetails.familyName
+                this.givenName = userDetails.givenName
+                this.isTracker = userDetails.isTracker
             }
             userService.upsertUser(user)
             Response.Success()
@@ -50,18 +50,14 @@ class UserController(
     }
 
     @GetMapping("userDetails")
-    fun userDetails(@RequestHeader("access-token") accessToken: String): Response<Any>{
-        val agcAuth = AGCAuth.getInstance()
-        val accessTokenResult = agcAuth.verifyAccessToken(accessToken, true)
-        val user = userService.queryUserById(accessTokenResult.sub)
+    fun userDetails(): Response<Any>{
+        val user = userSession.user
         return if(user != null){
             Response.Success(user)
         }else{
             Response.Error("Unable to find user")
         }
     }
-
-
 
     @GetMapping("/test")
     fun sendMessageToKafkaTopic(@RequestParam message: String): String {

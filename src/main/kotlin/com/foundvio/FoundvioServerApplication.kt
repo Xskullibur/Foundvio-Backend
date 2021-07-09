@@ -11,6 +11,7 @@ import org.springframework.core.io.ResourceLoader
 import org.springframework.web.servlet.handler.MappedInterceptor
 
 @SpringBootApplication
+
 class FoundvioServerApplication(
     private val resourceLoader: ResourceLoader
 ) {
@@ -26,13 +27,16 @@ class FoundvioServerApplication(
         AGCClient.initialize(
             AGCParameter.builder()
                 .setCredential(CredentialParserInputStream.toCredential(credentialResource.inputStream))
-                .build())
+                .build()
+        )
     }
 
     @Bean
-    fun getMappedInterceptor(interceptor: HuaweiAuthHandlerInterceptor): MappedInterceptor{
+    fun getMappedInterceptor(interceptor: HuaweiAuthHandlerInterceptor): MappedInterceptor {
         return MappedInterceptor(arrayOf("/**"), interceptor)
     }
+
+
 }
 
 fun main(args: Array<String>) {

@@ -1,4 +1,4 @@
-package com.foundvio.controller
+package com.foundvio.controller.request
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.foundvio.utils.validation.ValidationField
@@ -13,6 +13,7 @@ class SetupUserDetails(
     val phone: String,
     val familyName: String,
     val givenName: String,
+    val isTracker: Boolean
 ): Validators() {
 
     @JsonIgnore

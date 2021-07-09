@@ -1,5 +1,7 @@
 package com.foundvio.validation
 
+import com.foundvio.controller.session.UserSession
+import com.foundvio.service.UserService
 import com.foundvio.utils.Logging
 import com.foundvio.utils.logger
 import com.huawei.agconnect.server.auth.exception.AGCAuthException
@@ -14,12 +16,15 @@ object HuaweiAuthValidation : Logging {
 
     private val logger = logger()
 
-    fun verifyToken(token: String?): Boolean {
+    fun verifyTokenAndSaveSession(userSession: UserSession,
+                                  userService: UserService,
+                                  token: String?): Boolean {
         val agcAuth = AGCAuth.getInstance()
         if(token == null)throw InvalidAccessToken()
 
         try{
-            agcAuth.verifyAccessToken(token, true)
+            val accessToken = agcAuth.verifyAccessToken(token, true)
+            userSession.user = userService.queryUserById(accessToken.sub)
             return true
         }catch (e: AGCAuthException){
             logger.error("Invalid access token, error code: ${e.errorCode}")

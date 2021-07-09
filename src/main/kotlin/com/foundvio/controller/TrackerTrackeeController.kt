@@ -1,6 +1,7 @@
 package com.foundvio.controller
 
 import com.foundvio.clouddb.model.TrackerTrackee
+import com.foundvio.controller.session.UserSession
 import com.foundvio.service.KafkaProducer
 import com.foundvio.service.TrackerTrackeeService
 import com.foundvio.utils.Logging
@@ -9,10 +10,12 @@ import com.foundvio.utils.logger
 import com.huawei.agconnect.server.auth.exception.AGCAuthException
 import com.huawei.agconnect.server.auth.service.AGCAuth
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 
 @RestController
 class TrackerTrackeeController (
+    val userSession: UserSession,
     val trackerTrackeeService: TrackerTrackeeService,
 ): Logging {
 
@@ -21,17 +24,15 @@ class TrackerTrackeeController (
     @PostMapping("addTrackerTrackee")
     fun addTrackerTrackee(
         @RequestHeader("access-token") accessToken: String,
-        @RequestParam trackee: String
+        @RequestParam trackeeId: String
     ): Response<Any> {
 
         return try {
-            val agcAuth = AGCAuth.getInstance()
-            val agcAccessToken = agcAuth.verifyAccessToken(accessToken, true)
-
             val trackerTrackee = TrackerTrackee().apply {
-                trackerId = agcAccessToken.phone
-                trackerId = accessToken
-                trackeeId = trackee
+                id = UUID.randomUUID().toString()
+                //TODO: Change this to Long instead of String
+                this.trackeeId = trackeeId
+                this.trackerId = userSession.user?.id.toString()
             }
 
             trackerTrackeeService.upsertTrackerTrackee(trackerTrackee)
