@@ -16,7 +16,6 @@ class HuaweiAuthHandlerInterceptor : HandlerInterceptor {
     lateinit var userService: UserService
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        return true
         val accessToken = request.getHeader("access-token")
         if(userSession.user != null){
             //Already authenticated
