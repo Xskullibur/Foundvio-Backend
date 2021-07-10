@@ -2,7 +2,6 @@ package com.foundvio.controller.request
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.foundvio.utils.validation.ValidationField
-import com.foundvio.utils.validation.Validators
 
 
 /**
@@ -14,31 +13,28 @@ class SetupUserDetails(
     val familyName: String,
     val givenName: String,
     val isTracker: Boolean
-): Validators() {
+) {
 
     @JsonIgnore
     val phoneValidation = ValidationField<String>().apply {
         rule("Phone cannot be blank") { it.isNotBlank() }
-        addValidator(this)
     }
     @JsonIgnore
     val familyNameValidation = ValidationField<String>().apply {
         rule("Family Name cannot be blank") { it.isNotBlank() }
-        addValidator(this)
     }
     @JsonIgnore
     val givenNameValidation = ValidationField<String>().apply {
         rule("Given Name cannot be blank") { it.isNotBlank() }
-        addValidator(this)
     }
 
     /**
      * Check if all the fields are valid
      */
-    fun validate(): Boolean {
-        return phoneValidation.validate(phone) and
-                familyNameValidation.validate(familyName) and
-                givenNameValidation.validate(givenName)
+    fun validate(): Array<String> {
+        return phoneValidation.validate(phone) +
+            familyNameValidation.validate(familyName) +
+            givenNameValidation.validate(givenName)
     }
 
 }

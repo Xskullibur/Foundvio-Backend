@@ -1,6 +1,5 @@
 package com.foundvio.utils.validation
 
-import java.util.function.Consumer
 
 
 /**
@@ -21,11 +20,7 @@ import java.util.function.Consumer
  *  ```
  *
  *  val email = "address@domain.com"
- *  checker.validate(email) <- returns true
- *
- *  checker.onError { validationMessage ->
- *      println(validationMessage)
- *  }
+ *  checker.validate(email) <- returns an array of error messages
  *
  *  ```
  *
@@ -35,20 +30,16 @@ class ValidationField<T>{
     private var validateCheckers: MutableList<ValidationChecker<T>> = mutableListOf()
     private var validateCheckersMessage: MutableList<String> = mutableListOf()
 
-    private var onError: Consumer<String?>? = null
-
     /**
      * Check if the given [field] is valid based on the rules or predicates
-     * @return if the [field] is valid
+     * @return an array of error messages if there is any error
      */
-    fun validate(field: T): Boolean {
-        return validateCheckers.withIndex().any { (index, checker) ->
+    fun validate(field: T): Array<String> {
+        return validateCheckers.mapIndexed { index, checker ->
             val result = checker.validate(field)
-            if(!result){ onError?.accept(validateCheckersMessage[index])}
-            result
-        }.also { valid ->
-            if(valid) onError?.accept(null)
-        }
+            if(!result) validateCheckersMessage[index]
+            else null
+        }.filterNotNull().toTypedArray()
     }
 
     /**
@@ -59,13 +50,6 @@ class ValidationField<T>{
     fun rule(errorMessage: String, validationField: ValidationChecker<T>) {
         validateCheckers += validationField
         validateCheckersMessage += errorMessage
-    }
-
-    /**
-     * Consume any new error message
-     */
-    fun onError(onError: Consumer<String?>){
-        this.onError = onError
     }
 
 

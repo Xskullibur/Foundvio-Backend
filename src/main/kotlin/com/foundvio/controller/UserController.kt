@@ -32,9 +32,17 @@ class UserController(
                 @RequestHeader("access-token") accessToken: String,
                 @RequestBody userDetails: SetupUserDetails
     ): Response<Any> {
+        //Validate user input
+        val invalidMessages = userDetails.validate()
+        if(invalidMessages.isNotEmpty()){
+            return Response.Error(invalidMessages)
+        }
+
+        //Upsert user
         return try{
             val agcAuth = AGCAuth.getInstance()
             val accessTokenResult = agcAuth.verifyAccessToken(accessToken, true)
+
             val user = User().apply {
                 this.id = accessTokenResult.sub
                 this.phone = userDetails.phone
