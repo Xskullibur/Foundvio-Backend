@@ -24,7 +24,7 @@ class TrackerTrackeeController (
     @PostMapping("addTrackerTrackee")
     fun addTrackerTrackee(
         @RequestHeader("access-token") accessToken: String,
-        @RequestParam trackeeId: String
+        @RequestParam trackeeId: Long
     ): Response<Any> {
 
         return try {
@@ -32,7 +32,7 @@ class TrackerTrackeeController (
                 id = UUID.randomUUID().toString()
                 //TODO: Change this to Long instead of String
                 this.trackeeId = trackeeId
-                this.trackerId = userSession.user?.id.toString()
+                this.trackerId = userSession.user?.id
             }
 
             trackerTrackeeService.upsertTrackerTrackee(trackerTrackee)

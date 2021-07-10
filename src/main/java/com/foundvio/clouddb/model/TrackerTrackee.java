@@ -17,24 +17,24 @@ import java.util.Date;
 /**
  * Definition of ObjectType TrackerTrackee.
  *
- * @since 2021-07-07
+ * @since 2021-07-10
  */
 @PrimaryKeys({"id"})
 public final class TrackerTrackee extends CloudDBZoneObject {
     private String id;
 
     @NotNull
-    @DefaultValue(stringValue = "NA")
-    private String trackerId;
+    @DefaultValue(longValue = 0L)
+    private Long trackerId;
 
     @NotNull
-    @DefaultValue(stringValue = "NA")
-    private String trackeeId;
+    @DefaultValue(longValue = 0L)
+    private Long trackeeId;
 
     public TrackerTrackee() {
         super(TrackerTrackee.class);
-        this.trackerId = "NA";
-        this.trackeeId = "NA";
+        this.trackerId = 0L;
+        this.trackeeId = 0L;
 
     }
 
@@ -46,19 +46,19 @@ public final class TrackerTrackee extends CloudDBZoneObject {
         return id;
     }
 
-    public void setTrackerId(String trackerId) {
+    public void setTrackerId(Long trackerId) {
         this.trackerId = trackerId;
     }
 
-    public String getTrackerId() {
+    public Long getTrackerId() {
         return trackerId;
     }
 
-    public void setTrackeeId(String trackeeId) {
+    public void setTrackeeId(Long trackeeId) {
         this.trackeeId = trackeeId;
     }
 
-    public String getTrackeeId() {
+    public Long getTrackeeId() {
         return trackeeId;
     }
 
