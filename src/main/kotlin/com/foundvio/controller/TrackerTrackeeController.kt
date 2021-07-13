@@ -24,13 +24,12 @@ class TrackerTrackeeController (
     @PostMapping("addTrackerTrackee")
     fun addTrackerTrackee(
         @RequestHeader("access-token") accessToken: String,
-        @RequestParam trackeeId: Long
+        @RequestBody trackeeId: Long
     ): Response<Any> {
 
         return try {
             val trackerTrackee = TrackerTrackee().apply {
                 id = UUID.randomUUID().toString()
-                //TODO: Change this to Long instead of String
                 this.trackeeId = trackeeId
                 this.trackerId = userSession.user?.id
             }

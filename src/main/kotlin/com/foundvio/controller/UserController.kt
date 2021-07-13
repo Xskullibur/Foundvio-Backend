@@ -29,8 +29,8 @@ class UserController(
 
     @PostMapping("registerUser")
     fun registerUser(
-                @RequestHeader("access-token") accessToken: String,
-                @RequestBody userDetails: SetupUserDetails
+        @RequestHeader("access-token") accessToken: String,
+        @RequestBody userDetails: SetupUserDetails
     ): Response<Any> {
         //Validate user input
         val invalidMessages = userDetails.validate()
@@ -64,6 +64,24 @@ class UserController(
             Response.Success(user)
         }else{
             Response.Error("Unable to find user")
+        }
+    }
+
+    @PostMapping("getUserById")
+    fun getUserById(@RequestBody userId: Long): Response<Any> {
+
+        return try {
+
+            val user = userService.queryUserById(userId)
+            if (user != null) {
+                Response.Success(user)
+            }
+            else {
+                Response.Error("Not Registered")
+            }
+        }
+        catch (e: Exception){
+            Response.Error("Unable to query User")
         }
     }
 
