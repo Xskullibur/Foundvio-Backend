@@ -1,9 +1,11 @@
 package com.foundvio.controller
 
 import com.foundvio.clouddb.model.TrackerTrackee
+import com.foundvio.clouddb.model.User
 import com.foundvio.controller.session.UserSession
 import com.foundvio.service.KafkaProducer
 import com.foundvio.service.TrackerTrackeeService
+import com.foundvio.service.UserService
 import com.foundvio.utils.Logging
 import com.foundvio.utils.Response
 import com.foundvio.utils.logger
@@ -17,13 +19,44 @@ import java.util.*
 class TrackerTrackeeController (
     val userSession: UserSession,
     val trackerTrackeeService: TrackerTrackeeService,
+    val userService: UserService
 ): Logging {
 
     private val logger = logger()
 
+    @GetMapping("getTrackeesByTrackerId")
+    fun getTrackeeByTrackerId(): Response<Any> {
+        return try {
+
+            val user = userSession.user
+            if (user != null) {
+                // Get all Tracker's Trackees
+                val trackerTrackees = trackerTrackeeService.queryTrackeesByTrackerId(user.id)
+                val trackees = mutableListOf<User>()
+
+                // Get Trackee User model from TrackeeId
+                if (trackerTrackees.isNotEmpty()) {
+                    for (result in trackerTrackees) {
+                        val trackee = userService.queryUserById(result.trackeeId)
+                        if (trackee != null) {
+                            trackees.add(trackee)
+                        }
+                    }
+                }
+
+                Response.Success(trackees)
+            }
+            else {
+                Response.Error("Failed to get user session")
+            }
+        }
+        catch (e: Exception){
+            Response.Error("Unable to query TrackerTrackee")
+        }
+    }
+
     @PostMapping("addTrackerTrackee")
     fun addTrackerTrackee(
-        @RequestHeader("access-token") accessToken: String,
         @RequestBody trackeeId: Long
     ): Response<Any> {
 
