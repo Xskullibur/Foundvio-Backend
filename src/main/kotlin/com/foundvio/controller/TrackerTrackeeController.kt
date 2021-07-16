@@ -74,4 +74,33 @@ class TrackerTrackeeController (
             Response.Error("Unable to upsert TrackerTrackee")
         }
     }
+
+    @PostMapping("removeTrackerTrackee")
+    fun removeTrackerTrackee(
+        @RequestBody trackeeId: Long
+    ): Response<Any> {
+
+        return try {
+
+            // Get TrackerId
+            val user = userSession.user
+            if (user != null) {
+                // Get TrackerTrackee
+                val trackerTrackee = trackerTrackeeService.queryTrackerTrackee(user.id, trackeeId)
+                val numberOfDeleted = trackerTrackeeService.deleteTrackerTrackee(trackerTrackee)
+
+                if (numberOfDeleted > 0) {
+                    Response.Success()
+                }
+                else {
+                    Response.Error("Failed to delete TrackerTrackee")
+                }
+            }
+
+            Response.Error("Failed to get user session")
+        }
+        catch (e: Exception) {
+            Response.Error("Failed to delete TrackerTrackee")
+        }
+    }
 }
